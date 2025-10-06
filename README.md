@@ -56,7 +56,7 @@ service/
 └── README.md # Project documentation
 
 
-## ⚙️ Prerequisites
+## Prerequisites
 
 
 Before setting up, make sure you have installed:
@@ -68,7 +68,7 @@ Before setting up, make sure you have installed:
 
 - **Virtual environment** (optional but recommended)
 
-## 🧰 Installation
+## Installation
 
 1. **Clone the repository**
 
@@ -103,3 +103,26 @@ Before setting up, make sure you have installed:
 SUPABASE_URL=https://your-project-ref.supabase.co
 
 SUPABASE_API=your-supabase-anon-key
+```
+
+## Testing the API with Swagger UI
+
+FastAPI automatically generates Swagger UI for interactive testing.
+
+1. **Open your browser and navigate to:**
+
+`http://127.0.0.1:8000/docs`
+
+You will see all the available endpoints grouped by tags (e.g., Timeseries).
+
+2. **Test endpoints by:**
+
+- Clicking on an endpoint (e.g., POST /timeseries/ingest_data)
+
+- Expanding the input form
+
+- Filling in example JSON payloads
+
+- Clicking “Execute”
+
+- Viewing the response directly in the browser
