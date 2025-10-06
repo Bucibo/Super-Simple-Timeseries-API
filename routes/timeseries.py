@@ -5,7 +5,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from typing import List, Optional
-from models import TimeseriesData, MetaData # import models
+from models import TimeseriesData, MetaData 
 
 load_dotenv()
 
