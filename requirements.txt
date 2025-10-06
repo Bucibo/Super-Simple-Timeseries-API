@@ -1,8 +1,7 @@
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 
-# Database
-asyncpg==0.29.0
+requests==2.31.0
 
 # Pydantic (FastAPI pulls this in, but good to pin)
 pydantic==2.9.2
