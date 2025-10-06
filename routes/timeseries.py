@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Query
+import asyncio
 from supabase import create_client, Client
 import os
 import requests
@@ -18,22 +19,25 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_API)
 requests.adapters.DEFAULT_RETRIES = 1
 TIMEOUT = 5  # seconds
 
-def metric_exists(metric_name: str) -> bool:
-    return bool(supabase.table("metadata")
-                .select("metric_name")
-                .eq("metric_name", metric_name)
-                .limit(1)
-                .execute().data)
+async def metric_exists(metric_name: str) -> bool:
+    result = await asyncio.to_thread(
+        lambda: supabase.table("metadata")
+                       .select("metric_name")
+                       .eq("metric_name", metric_name)
+                       .limit(1)
+                       .execute()
+    )
+    return bool(result.data)
 
 # --- Data Ingestion ---
 @router.post("/ingest_data")
-def ingest_data(data: List[TimeseriesData]):
+async def ingest_data(data: List[TimeseriesData]):
     
     payload = []
     new_metrics = []
     
-    # Fetch existing metrics once
-    existing_metrics = {m["metric_name"] for m in supabase.table("metadata").select("metric_name").execute().data or []}
+    existing_metrics_res = await asyncio.to_thread(lambda: supabase.table("metadata").select("metric_name").execute())
+    existing_metrics = {m["metric_name"] for m in existing_metrics_res.data or []}
 
     for item in data:
         item_dict = item.model_dump()
@@ -60,11 +64,11 @@ def ingest_data(data: List[TimeseriesData]):
 
     # Insert new metadata in bulk
     if new_metrics:
-        supabase.table("metadata").insert(new_metrics).execute()
+        await asyncio.to_thread(lambda: supabase.table("metadata").insert(new_metrics).execute())
 
     # Insert timeseries
     try:
-        result = supabase.table("timeseries").insert(payload).execute()
+        result = await asyncio.to_thread(lambda: supabase.table("timeseries").insert(payload).execute())
         return {
             "status": "success",
             "inserted_rows": len(result.data or []),
@@ -77,7 +81,7 @@ def ingest_data(data: List[TimeseriesData]):
 
 # --- Filter Query ---
 @router.get("/query_data")
-def query_timeseries(
+async def query_timeseries(
     metric_name: str = Query(..., description="Metric name to filter by"),
     start_date: str = Query(..., description="Start date (ISO format, e.g. 2024-01-01T00:00:00Z)"),
     end_date: str = Query(..., description="End date (ISO format, e.g. 2024-02-01T00:00:00Z)"),
@@ -88,13 +92,13 @@ def query_timeseries(
     if agg_func and agg_func.strip():
         # agg_func is not None and not empty/whitespace (There is use of an aggregation function)
         try:
-            response = supabase.rpc("aggregate_timeseries", {
+            response = await asyncio.to_thread(lambda: supabase.rpc("aggregate_timeseries", {
                 "p_metric_name": metric_name,
                 "p_start": start_date,
                 "p_end": end_date,
                 "p_agg_function": agg_func.upper(),
                 "p_interval": interval
-            }).execute()
+            }).execute())
         
             return {"status": "success", "data": response.data}
     
@@ -108,7 +112,7 @@ def query_timeseries(
         """
     
         try:
-            response = (
+            response = (await asyncio.to_thread(lambda: 
                 supabase.table("timeseries")
                 .select("*")
                 .eq("metric_name", metric_name)
@@ -116,7 +120,7 @@ def query_timeseries(
                 .lte("ts", end_date)
                 .order("ts", desc=False)
                 .execute()
-            )
+            ))
 
             if not response.data:
                 return {"status": "no_data", "message": "No records found for this query."}
@@ -139,9 +143,9 @@ def query_timeseries(
 
 # --- List Metrics and Metadata ---
 @router.get("/list_metrics")
-def get_metadata():
+async def get_metadata():
     try:
-        response = supabase.table("metadata").select("*").execute()
+        response = await asyncio.to_thread(lambda: supabase.table("metadata").select("*").execute())
         Metadata = [
             MetaData(
                 metric_name=row.get("metric_name"),
