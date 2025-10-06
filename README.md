@@ -98,9 +98,11 @@ Before setting up, make sure you have installed:
 
 4. **Create a .env file in the project root with the following variables:**
 
+For the purpose of this Assessment, the SUPABASE_URL AND SUPABASE API keys are provided in the report sent via email(page 2)
+
 ```bash
 
-SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_URL=https://your-project-ref.supabase.co 
 
 SUPABASE_API=your-supabase-anon-key
 ```
