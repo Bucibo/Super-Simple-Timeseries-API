@@ -1,0 +1,71 @@
+# -------------------------------
+# Python and FastAPI Project
+# -------------------------------
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Environment variables
+# (contains Supabase API keys and secrets)
+*.env
+.env.local
+.env.*.local
+
+# Supabase configuration (if any)
+.supabase/
+
+# FastAPI specific
+*.db
+instance/
+*.sqlite3
+
+# Uvicorn logs
+*.log
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test / coverage outputs
+.pytest_cache/
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+
+# Temporary or backup files
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# -------------------------------
+# Custom Project Paths
+# -------------------------------
+# Ignore Service artifacts or compiled files
+C:/Users/herry/OneDrive/Desktop/Service/__pycache__/
+C:/Users/herry/OneDrive/Desktop/Service/venv/
+C:/Users/herry/OneDrive/Desktop/Service/*.log
+C:/Users/herry/OneDrive/Desktop/Service/.env

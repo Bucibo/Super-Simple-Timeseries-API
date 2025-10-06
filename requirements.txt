@@ -1,0 +1,14 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+
+# Database
+asyncpg==0.29.0
+
+# Pydantic (FastAPI pulls this in, but good to pin)
+pydantic==2.9.2
+
+# Supabase client (optional, if you ever want to use it instead of asyncpg)
+supabase==2.4.1
+
+# For environment variables (.env support)
+python-dotenv==1.0.1
