@@ -72,29 +72,35 @@ Before setting up, make sure you have installed:
 
 1. **Clone the repository**
 
-   ```bash
+```bash
 
    git clone https://github.com/Bucibo/Super-Simple-Timeseries-API.git
 
-   cd timeseries-api
-
+   cd Super-Simple-Timeseries-API
+```
 
 2. **Create and activate a virtual environment**
+```bash
+  python -m venv venv
+```
 
-  `python -m venv venv`
+## On Windows ##
 
-## On Windows
-
-  `venv\Scripts\activate`
+```bash
+  venv\Scripts\activate
+```
 
 ## On Mac/Linux
 
-  `source venv/bin/activate`
+```bash
+  source venv/bin/activate
+```
 
 3. **Install dependencies**
-   
-  `pip install -r requirements.txt`
 
+```bash
+  pip install -r requirements.txt
+``` 
 
 4. **Create a .env file in the project root with the following variables:**
 
@@ -106,6 +112,11 @@ SUPABASE_URL=https://your-project-ref.supabase.co
 
 SUPABASE_API=your-supabase-anon-key
 ```
+## Running the service with uvicorn: ##
+
+```bash
+uvicorn app:app --reload
+```
 
 ## Testing the API with Swagger UI
 
@@ -113,9 +124,11 @@ FastAPI automatically generates Swagger UI for interactive testing.
 
 1. **Open your browser and navigate to:**
 
-`http://127.0.0.1:8000/docs`
+```bash
+http://127.0.0.1:8000/docs
+```
 
-You will see all the available endpoints grouped by tags (e.g., Timeseries).
+- You will see all the available endpoints grouped by tags (e.g., Timeseries).
 
 2. **Test endpoints by:**
 
