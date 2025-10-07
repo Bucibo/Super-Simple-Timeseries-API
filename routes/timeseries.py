@@ -50,10 +50,13 @@ async def ingest_data(data: List[TimeseriesData]):
             except Exception:
                 item_dict["ts"] = str(ts)
         
+        # Convert metric_name to lowercase
+        metric_name = item_dict.get("metric_name", "").lower()
+        item_dict["metric_name"] = metric_name
+        
         payload.append(item_dict)
 
         # Add new metrics to bulk insert
-        metric_name = item_dict.get("metric_name")
         if metric_name not in existing_metrics:
             new_metrics.append({
                 "metric_name": metric_name,
@@ -93,7 +96,7 @@ async def query_timeseries(
         # agg_func is not None and not empty/whitespace (There is use of an aggregation function)
         try:
             response = await asyncio.to_thread(lambda: supabase.rpc("aggregate_timeseries", {
-                "p_metric_name": metric_name,
+                "p_metric_name": metric_name.lower(),
                 "p_start": start_date,
                 "p_end": end_date,
                 "p_agg_function": agg_func.upper(),
@@ -115,7 +118,7 @@ async def query_timeseries(
             response = (await asyncio.to_thread(lambda: 
                 supabase.table("timeseries")
                 .select("*")
-                .eq("metric_name", metric_name)
+                .eq("metric_name", metric_name.lower())
                 .gte("ts", start_date)
                 .lte("ts", end_date)
                 .order("ts", desc=False)
